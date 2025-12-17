@@ -102,6 +102,7 @@ async function sendMessage(to, body) {
 }
 
 async function replyMessage(to, body, messageId) {
+  console.log(to, body, messageId);
   try {
     const response = await axios.post(
       `https://graph.facebook.com/v22.0/${phoneNumberId}/messages`,
