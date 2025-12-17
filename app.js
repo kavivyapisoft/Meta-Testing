@@ -1,7 +1,7 @@
 const express = require('express')
 const axios = require('axios')
 
-const WHATSAPP_ACCESS_TOKEN = =process.env.TOKEN
+const WHATSAPP_ACCESS_TOKEN = process.env.TOKEN
 const WEBHOOK_VERIFY_TOKEN = process.env.MYTOKEN
 
 const app = express()
