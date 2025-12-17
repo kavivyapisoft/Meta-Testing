@@ -48,6 +48,7 @@ app.post('/webhook', async (req, res) => {
       STATUS: ${statuses.status}
     `)
   }
+    console.log('From', messages);
 
   if (messages) {
     // Handle received messages
@@ -106,10 +107,10 @@ async function replyMessage(to, body, messageId) {
       `https://graph.facebook.com/v22.0/${phoneNumberId}/messages`,
       {
         messaging_product: 'whatsapp',
-        to,
+        to:to,
         type: 'text',
         text: {
-          body
+          body:body
         },
         context: {
           message_id: messageId
