@@ -124,14 +124,12 @@ async function replyMessage(to, body, messageId) {
     );
 
     console.log('WhatsApp reply sent:', response.data);
-    return response.data;
 
   } catch (error) {
     console.error(
       'WhatsApp reply failed:',
       error.response?.data || error.message
     );
-    throw error; // optional: rethrow if caller needs to handle it
   }
 }
 
