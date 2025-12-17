@@ -99,6 +99,7 @@ async function sendMessage(to, body) {
     })
   })
 }
+
 async function replyMessage(to, body, messageId) {
   try {
     const response = await axios.post(
@@ -116,7 +117,7 @@ async function replyMessage(to, body, messageId) {
       },
       {
         headers: {
-          Authorization: `Bearer ${process.env.WHATSAPP_ACCESS_TOKEN}`,
+          Authorization: `Bearer ${WHATSAPP_ACCESS_TOKEN}`,
           'Content-Type': 'application/json'
         }
       }
