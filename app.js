@@ -99,28 +99,41 @@ async function sendMessage(to, body) {
     })
   })
 }
-
 async function replyMessage(to, body, messageId) {
-  await axios({
-    url: `https://graph.facebook.com/v22.0/${phoneNumberId}/messages`,
-    method: 'post',
-    headers: {
-      'Authorization': `Bearer ${WHATSAPP_ACCESS_TOKEN}`,
-      'Content-Type': 'application/json'
-    },
-    data: JSON.stringify({
-      messaging_product: 'whatsapp',
-      to,
-      type: 'text',
-      text: {
-        body
+  try {
+    const response = await axios.post(
+      `https://graph.facebook.com/v22.0/${phoneNumberId}/messages`,
+      {
+        messaging_product: 'whatsapp',
+        to,
+        type: 'text',
+        text: {
+          body
+        },
+        context: {
+          message_id: messageId
+        }
       },
-      context: {
-        message_id: messageId
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.WHATSAPP_ACCESS_TOKEN}`,
+          'Content-Type': 'application/json'
+        }
       }
-    })
-  })
+    );
+
+    console.log('WhatsApp reply sent:', response.data);
+    return response.data;
+
+  } catch (error) {
+    console.error(
+      'WhatsApp reply failed:',
+      error.response?.data || error.message
+    );
+    throw error; // optional: rethrow if caller needs to handle it
+  }
 }
+
 
 async function sendList(to) {
   await axios({
