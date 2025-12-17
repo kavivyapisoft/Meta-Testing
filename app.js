@@ -3,6 +3,7 @@ const axios = require('axios')
 
 const WHATSAPP_ACCESS_TOKEN = process.env.TOKEN
 const WEBHOOK_VERIFY_TOKEN = process.env.MYTOKEN
+const phone_number_id ="960587527127470"
 
 const app = express()
 app.use(express.json())
