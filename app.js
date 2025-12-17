@@ -31,51 +31,61 @@ app.get("/webhook",(req,res)=>{
 
 });
 
-app.post("/webhook",(req,res)=>{ //i want some 
+app.post("/webhook", async (req, res) => {
+  try {
+    const body_param = req.body;
 
-    let body_param=req.body;
+    console.log(JSON.stringify(body_param, null, 2));
 
-    console.log(JSON.stringify(body_param,null,2));
+    // Validate webhook structure
+    if (
+      body_param.object &&
+      body_param.entry?.[0]?.changes?.[0]?.value?.messages?.[0]
+    ) {
+      console.log("Inside body param");
 
-    if(body_param.object){
-        console.log("inside body param");
-        if(body_param.entry && 
-            body_param.entry[0].changes && 
-            body_param.entry[0].changes[0].value.messages && 
-            body_param.entry[0].changes[0].value.messages[0]  
-            ){
-               let phon_no_id=body_param.entry[0].changes[0].value.metadata.phone_number_id;
-               let from = body_param.entry[0].changes[0].value.messages[0].from; 
-               let msg_body = body_param.entry[0].changes[0].value.messages[0].text.body;
+      const value = body_param.entry[0].changes[0].value;
 
-               console.log("phone number "+phon_no_id);
-               console.log("from "+from);
-               console.log("boady param "+msg_body);
+      const phone_no_id = value.metadata.phone_number_id;
+      const from = value.messages[0].from;
 
-               axios({
-                   method:"POST",
-                   url:"https://graph.facebook.com/v22.0/"+phon_no_id+"/messages?access_token="+token,
-                   data:{
-                       messaging_product:"whatsapp",
-                       to:from,
-                       text:{
-                           body:msg_body
-                       }
-                   },
-                   headers:{
-                       "Content-Type":"application/json"
-                   }
+      // Handle text messages safely
+      const msg_body = value.messages[0].text?.body || "";
 
-               });
+      console.log("phone number:", phone_no_id);
+      console.log("from:", from);
+      console.log("message:", msg_body);
 
-               res.sendStatus(200);
-            }else{
-                res.sendStatus(404);
-            }
+      // Send reply
+      await axios.post(
+        `https://graph.facebook.com/v18.0/${phone_no_id}/messages`,
+        {
+          messaging_product: "whatsapp",
+          to: from,
+          text: {
+            body:msg_body
+          }
+        },
+        {
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
+        }
+      );
 
+      return res.sendStatus(200);
     }
 
+    // If webhook event is not a message
+    return res.sendStatus(200);
+
+  } catch (error) {
+    console.error("Webhook error:", error.response?.data || error.message);
+    return res.sendStatus(500);
+  }
 });
+
 
 app.get("/",(req,res)=>{
     res.status(200).send("hello this is webhook setup");
