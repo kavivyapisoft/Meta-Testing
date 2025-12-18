@@ -112,10 +112,8 @@ app.post('/webhook', async (req, res) => {
 
             if (messages?.interactive?.button_reply?.id === 'request_btn') {
 
-              sendMessage(
-                messages.from,
-                '📝 Please enter your Request ID (example: REQ-1234)'
-              );
+            replyMessage(messages.from, '📝 Please enter your Request ID (example: REQ-1234)', messages.id)
+            
 
             } else if (messages?.interactive?.button_reply?.id === 'hp_btn') {
 
