@@ -83,22 +83,32 @@ app.post('/webhook', async (req, res) => {
 })
 
 async function sendMessage(to, body) {
-  await axios({
-    url: `https://graph.facebook.com/v22.0/${phoneNumberId}/messages`,
-    method: 'post',
-    headers: {
-      'Authorization': `Bearer ${WHATSAPP_ACCESS_TOKEN}`,
-      'Content-Type': 'application/json'
-    },
-    data: JSON.stringify({
-      messaging_product: 'whatsapp',
-      to,
-      type: 'text',
-      text: {
-        body
+    console.log(to, body);
+  try {
+    const response = await axios.post(
+      `https://graph.facebook.com/v22.0/${phoneNumberId}/messages`,
+      {
+        messaging_product: 'whatsapp',
+        to:to,
+        type: 'text',
+        text: {
+          body:body
+        },
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${WHATSAPP_ACCESS_TOKEN}`,
+          'Content-Type': 'application/json'
+        }
       }
-    })
-  })
+    );
+
+  } catch (error) {
+    console.error(
+      'WhatsApp reply failed:',
+      error.response?.data || error.message
+    );
+  }
 }
 
 async function replyMessage(to, body, messageId) {
@@ -137,14 +147,11 @@ async function replyMessage(to, body, messageId) {
 
 
 async function sendList(to) {
-  await axios({
-    url: `https://graph.facebook.com/v22.0/${phoneNumberId}/messages`,
-    method: 'post',
-    headers: {
-      'Authorization': `Bearer ${WHATSAPP_ACCESS_TOKEN}`,
-      'Content-Type': 'application/json'
-    },
-    data: JSON.stringify({
+    console.log(to);
+  try {
+    const response = await axios.post(
+      `https://graph.facebook.com/v22.0/${phoneNumberId}/messages`,
+      {
       messaging_product: 'whatsapp',
       to,
       type: 'interactive',
@@ -190,19 +197,29 @@ async function sendList(to) {
           ]
         }
       }
-    })
-  })
+    },
+      {
+        headers: {
+          Authorization: `Bearer ${WHATSAPP_ACCESS_TOKEN}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+  } catch (error) {
+    console.error(
+      'WhatsApp reply failed:',
+      error.response?.data || error.message
+    );
+  }
 }
 
 async function sendReplyButtons(to) {
-  await axios({
-    url: `https://graph.facebook.com/v22.0/${phoneNumberId}/messages`,
-    method: 'post',
-    headers: {
-      'Authorization': `Bearer ${WHATSAPP_ACCESS_TOKEN}`,
-      'Content-Type': 'application/json'
-    },
-    data: JSON.stringify({
+   console.log(to);
+  try {
+    const response = await axios.post(
+      `https://graph.facebook.com/v22.0/${phoneNumberId}/messages`,
+      {
       messaging_product: 'whatsapp',
       to,
       type: 'interactive',
@@ -237,8 +254,21 @@ async function sendReplyButtons(to) {
           ]
         }
       }
-    })
-  })
+    },
+      {
+        headers: {
+          Authorization: `Bearer ${WHATSAPP_ACCESS_TOKEN}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+  } catch (error) {
+    console.error(
+      'WhatsApp reply failed:',
+      error.response?.data || error.message
+    );
+  }
 }
 
 app.listen(3000, () => {
