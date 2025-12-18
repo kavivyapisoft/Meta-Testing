@@ -49,13 +49,7 @@ app.post('/webhook', async (req, res) => {
     `)
   }
     console.log('From', messages);
-    let regexMap = {
-            request_btn: /^REQ-\d{4}$/,
-            hp_btn: /^HP-\d{4}$/,
-            nci_btn: /^NCI-\d{6}-\d{4}$/
-          };   
-    let buttonId = messages?.interactive?.button_reply?.id;
-    let userInput = messages?.text?.body.trim();
+  
     let errorMessageMap = {
             request_btn: '❌ Invalid Request ID. Use format: REQ-1234',
             hp_btn: '❌ Invalid Hot Part ID. Use format: HP-1234',
@@ -76,29 +70,33 @@ app.post('/webhook', async (req, res) => {
       if (messages.text.body.toLowerCase() === 'buttons') {
         sendReplyButtons(messages.from)
       }
-
-      console.log(messages?.interactive);
       
-        
-      if (messages.text.body.toLowerCase() === 'req-1234') {
-        replyMessage(messages.from, '✅ Thank you! Your Request ID has been verified successfully.', messages.id)
+        const patterns = {
+          REQUEST: /^REQ-\d{4}$/i,
+          HOTPART: /^HP-\d{4}$/i,
+          NCI: /^NCI-\d{6}-\d{4}$/i
+        };
+          const userInput = messages.text.body.trim().replace(/\s+/g, '');
+      
+      if (patterns.REQUEST.test(userInput)) {
+            console.log('✅ REQUEST matched');
 
-      } else if (buttonId === 'hp_btn' && userInput) {
-        sendMessage(
-          messages.from,
-          '✅ Thank you! Your Hot Part ID has been verified successfully.'
-        );
-      } else if (buttonId === 'nci_btn' && userInput) {
-        sendMessage(
-          messages.from,
-          '✅ Thank you! Your NCI number has been verified successfully.'
-        );
-      } else{     
-       sendMessage(
-         messages.from,
-         errorMessageMap[buttonId]
-       );
-     }
+        // replyMessage(messages.from, 
+        //   '✅ Thank you! Your Request ID has been verified successfully.', 
+        //   messages.id)
+      }
+
+      if (messages.text.body.toLowerCase() === 'hp-1234') {
+         replyMessage(messages.from, 
+          '✅ Thank you! Your Hot Part ID has been verified successfully.', 
+          messages.id)
+      } 
+
+      if (messages.text.body.toLowerCase() === 'nci-202512-1234') {
+         replyMessage(messages.from, 
+          '✅ Thank you! Your NCI number has been verified successfully.', 
+          messages.id)
+      } 
             
     }
 
