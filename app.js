@@ -390,13 +390,13 @@ async function sendReplyButtons(to) {
                 title: 'DAILY DEMAND'
               }
             },
-            {
-              type: 'reply',
-              reply: {
-                id: 'nci_btn',
-                title: 'NCI'
-              }
-            }
+            // {
+            //   type: 'reply',
+            //   reply: {
+            //     id: 'nci_btn',
+            //     title: 'NCI'
+            //   }
+            // }
           ]
         }
       }
