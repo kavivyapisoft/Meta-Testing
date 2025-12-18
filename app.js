@@ -68,15 +68,16 @@ app.post('/webhook', async (req, res) => {
         const patterns = {
           requesttemp: /^REQ-\d{4}$/i,
           hotparttemp: /^HP-\d{4}$/i,
+          dailydemandtemp: /^DD-\d{4}$/i,
           ncitemp: /^NCI-\d{6}-\d{4}$/i
         };
           const userInput = messages.text.body.trim().replace(/\s+/g, '');
       
       if (patterns.requesttemp.test(userInput)) {
             console.log('✅ REQUEST matched');
-        // replyMessage(messages.from, 
-        //   '✅ Thank you! Your Request ID has been verified successfully.', 
-        //   messages.id)
+        replyMessage(messages.from, 
+          '✅ Thank you! Your Request ID has been verified successfully.', 
+          messages.id)
       }
 
       if (patterns.hotparttemp.test(userInput)) {
@@ -84,57 +85,31 @@ app.post('/webhook', async (req, res) => {
             const match = userInput.match(/^HP-(\d{4})$/i);
           if (match) {
             const numberOnly = match[1];
-            console.log(numberOnly); // 1234
-             try {
-                // 🔹 API call
-                const apiResponse = await axios.get(
-                  `https://zfdevapi.sunlandls.com/ctarmticket/Hotparts/Getdetailsbyid?Type=hotparts&TicketId=${numberOnly}`
-                );
-
-                const data = apiResponse.data[0];
-
-                let TempSend =`
- id: ${data.id}
- storer:${ data.storer}
- Sku: ${data.Sku}
- itemdescription: ${data.itemdescription}
- Grn: ${data.Grn}
- status: ${data.status}
- Type: ${data.Type}
- MRPCode: ${data.MRPCode}
- Quantity: ${data.Quantity}
- AvailableQuantity: ${data.AvailableQuantity}
- Category: ${data.Category}
- Department: ${data.Department}
- DemandDate: ${data.DemandDate}
- Priority: ${data.Priority}
- PriorityCode: ${data.PriorityCode}
- Latesthotpart_reasoncodes: ${data.Latesthotpart_reasoncodes}
- TRAILERNUMBER: ${data.TRAILERNUMBER}
- CreatedAt:${data.CreatedAt}
- CreatedByUser: ${data.CreatedByUser}
- EditedAt: ${data.EditedAt}
- editedbyuser: ${data.editedbyuser}
- assignedtoemail: ${data.assignedtoemail}
- ✅ Thank you!
-  `
-
-                sendMessage(
-                  messages.from,
-                  TempSend
-                );
-
-              } catch (error) {
-                sendMessage(
-                  messages.from,
-                  `❌ Sorry, Hot Part ${hotPartNumber} not found.\nPlease check and try again.`
-                );
-              }
+            const ApiUrl = 'hotparts';
+            const title = 'Hot Parts';              
+            hpAndDD(
+              ApiUrl,
+              title,
+              numberOnly
+             )
+            
           }
-
-
-       
       } 
+      if (patterns.dailydemandtemp.test(userInput)) {
+          console.log('✅ REQUEST matched');
+            const match = userInput.match(/^DD-(\d{4})$/i);
+          if (match) {
+            const numberOnly = match[1];
+            const ApiUrl = 'Daily%20Demand';
+            const title = 'Daily Demand';
+
+             hpAndDD(
+              ApiUrl,
+              title,
+              numberOnly
+             )
+          }
+      }
 
       if (patterns.ncitemp.test(userInput)) {
          console.log('✅ REQUEST matched');
@@ -165,14 +140,21 @@ app.post('/webhook', async (req, res) => {
                 '📝 Please enter your Request ID. (example: HP-1234)'
               );
 
-            } else if (messages?.interactive?.button_reply?.id === 'nci_btn') {
+            }  else if (messages?.interactive?.button_reply?.id === 'dd_btn') {
+
+              sendMessage(
+                messages.from,
+                '📝 Please enter your Request ID. (example: DD-1234)'
+              );
+
+            }  else if (messages?.interactive?.button_reply?.id === 'nci_btn') {
 
               sendMessage(
                 messages.from,
                 '📝 Please enter your Request ID. (example: NCI-202512-1234)'
               );
 
-            } 
+            }   
       }
 
     }
@@ -183,6 +165,54 @@ app.post('/webhook', async (req, res) => {
   
   res.status(200).send('Webhook processed')
 })
+
+async function hpAndDD(apiurl, title, value) {
+    console.log(to, body);
+  try {
+   const apiResponse = await axios.get(
+                  `https://zfdevapi.sunlandls.com/ctarmticket/Hotparts/Getdetailsbyid?Type=${apiurl}&TicketId=${value}`
+                );
+
+                const data = apiResponse.data[0];
+
+                let TempSend =`
+🚨 Basic Information
+ Id : ${data.id}
+ Storer :${ data.storer}
+ Sku : ${data.Sku}
+ Item Description : ${data.itemdescription}
+ Grn : ${data.Grn}
+ Status : ${data.status}
+ Type : ${data.Type}
+ MRP Code : ${data.MRPCode}
+ Quantity : ${data.Quantity}
+ Available Quantity : ${data.AvailableQuantity}
+ Category : ${data.Category}
+ Department : ${data.Department}
+ Demand Date : ${data.DemandDate}
+ Priority : ${data.Priority}
+ Priority Code : ${data.PriorityCode}
+ Latest Hotpart_reasoncodes : ${data.Latesthotpart_reasoncodes}
+ Trailer Number : ${data.TRAILERNUMBER}
+ Created At :${data.CreatedAt}
+ Created By User : ${data.CreatedByUser}
+ Edited At : ${data.EditedAt}
+ Edited By User : ${data.editedbyuser}
+ Assigned To Email : ${data.assignedtoemail}
+ ✅ Thank you!
+  `
+                sendMessage(
+                  messages.from,
+                  TempSend
+                );
+
+  } catch (error) {
+        sendMessage(
+           messages.from,
+           `❌ Sorry,  ${title} +'  '+ ${userInput} not found.\nPlease check and try again.`
+         );
+  }
+}
 
 async function sendMessage(to, body) {
     console.log(to, body);
@@ -351,6 +381,13 @@ async function sendReplyButtons(to) {
               reply: {
                 id: 'hp_btn',
                 title: 'HOT PART'
+              }
+            },
+            {
+              type: 'reply',
+              reply: {
+                id: 'dd_btn',
+                title: 'DAILY DEMAND'
               }
             },
             {
