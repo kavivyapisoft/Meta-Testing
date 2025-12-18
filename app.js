@@ -55,7 +55,6 @@ app.post('/webhook', async (req, res) => {
             nci_btn: /^NCI-\d{6}-\d{4}$/
           };   
     let buttonId = messages?.interactive?.button_reply?.id;
-    let selectedRegex = regexMap[buttonId];
     let userInput = messages?.text?.body.trim();
     let errorMessageMap = {
             request_btn: '❌ Invalid Request ID. Use format: REQ-1234',
@@ -77,8 +76,11 @@ app.post('/webhook', async (req, res) => {
       if (messages.text.body.toLowerCase() === 'buttons') {
         sendReplyButtons(messages.from)
       }
+
+      console.log(messages?.interactive);
+      
         
-      if (buttonId === 'request_btn' && userInput) {
+      if (messages.text.body.toLowerCase() === req-1234) {
         sendMessage(
           messages.from,
           '✅ Thank you! Your Request ID has been verified successfully.'
