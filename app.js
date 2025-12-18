@@ -81,10 +81,8 @@ app.post('/webhook', async (req, res) => {
       
         
       if (messages.text.body.toLowerCase() === req-1234) {
-        sendMessage(
-          messages.from,
-          '✅ Thank you! Your Request ID has been verified successfully.'
-        );
+        replyMessage(messages.from, '✅ Thank you! Your Request ID has been verified successfully.', messages.id)
+
       } else if (buttonId === 'hp_btn' && userInput) {
         sendMessage(
           messages.from,
