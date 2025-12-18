@@ -82,36 +82,36 @@ app.post('/webhook', async (req, res) => {
         sendReplyButtons(messages.from)
       }
         
-      if(messages.text.body && !selectedRegex.test(userInput)){
+      // if(messages.text.body && !selectedRegex.test(userInput)){
         
-         sendMessage(
-                messages.from,
-                successMessageMap[buttonId]
-              );
+      //    sendMessage(
+      //           messages.from,
+      //           successMessageMap[buttonId]
+      //         );
 
-              // if (buttonId === 'request_btn') {
-              //   sendMessage(
-              //     messages.from,
-              //     '✅ Thank you! Your Request ID has been verified successfully.'
-              //   );
-              // } else if (buttonId === 'hp_btn') {
-              //   sendMessage(
-              //     messages.from,
-              //     '✅ Thank you! Your Hot Part ID has been verified successfully.'
-              //   );
-              // } else if (buttonId === 'nci_btn') {
-              //   sendMessage(
-              //     messages.from,
-              //     '✅ Thank you! Your NCI number has been verified successfully.'
-              //   );
-              // } 
+      //         // if (buttonId === 'request_btn') {
+      //         //   sendMessage(
+      //         //     messages.from,
+      //         //     '✅ Thank you! Your Request ID has been verified successfully.'
+      //         //   );
+      //         // } else if (buttonId === 'hp_btn') {
+      //         //   sendMessage(
+      //         //     messages.from,
+      //         //     '✅ Thank you! Your Hot Part ID has been verified successfully.'
+      //         //   );
+      //         // } else if (buttonId === 'nci_btn') {
+      //         //   sendMessage(
+      //         //     messages.from,
+      //         //     '✅ Thank you! Your NCI number has been verified successfully.'
+      //         //   );
+      //         // } 
 
-      }else {
-              sendMessage(
-                messages.from,
-                errorMessageMap[buttonId]
-              );
-            }
+      // }else {
+      //         sendMessage(
+      //           messages.from,
+      //           errorMessageMap[buttonId]
+      //         );
+      //       }
     }
 
     if (messages.type === 'interactive') {
