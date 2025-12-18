@@ -1,7 +1,7 @@
 const express = require('express')
 const axios = require('axios')
 
-const WHATSAPP_ACCESS_TOKEN = "EAAKePyNJnaUBQAaoZB1YtuLBXnOlUwM6O6gL3c66VEg3BZAqmPuc8ZBVsWXcZCrFAfAymGEbSspi4l3ygmnSpVKtQ9XQWsF6bEOT60LBR9GNSq79xZBXvtYhR2XZBcONPIjLiZA2rGms4mFIe7i5MMYfpcA0l8T7rzIXZBNPb1tbZCNT4FxB2xsnbZCSCbv0NLaPJdoMO3Vb0yhglIdhrjSyle8OKiPn0B2rsO8ALO3wqjJCUFTqHyoJGAyprG9ATKfMeQui1TSJFXDZAOZCu2l2xy0ozgWAgQZDZD"
+const WHATSAPP_ACCESS_TOKEN = "EAAKePyNJnaUBQG2J1Eat0Jy9o650GpFkw8i3ag4hV39DIi7g06b6gj5WysE01el9G1nMRKsNeFXUt3uYifD0NcHt8dMb3rUci21ZCNeXdtdpzoSCslkOAtzBMZAdt3L8VBknI1wmQIybGZByeRHLWmgxY7Xqu5unOLRKCDLZCgeUZC2TNxbqCe7HdZARghFNHpIex23PM93Hlkv5f6dDxfKat47PSkGvUZCXRk4m5O3PJO2XpApfel49U6ZAhmeLaIp8MCyh3XcCzsTBUSj3cAkCLmDP"
 const WEBHOOK_VERIFY_TOKEN = "KAVI"
 const phoneNumberId ="960587527127470"
 
@@ -64,56 +64,56 @@ app.post('/webhook', async (req, res) => {
       if (messages.text.body.toLowerCase() === 'buttons') {
         sendReplyButtons(messages.from)
       }
-      // if(messages.text.body){
-      //     let regexMap = {
-      //       request_btn: /^REQ-\d{4}$/,
-      //       hp_btn: /^HP-\d{4}$/,
-      //       nci_btn: /^NCI-\d{6}-\d{4}$/
-      //     };   
-      //     let buttonId = messages.interactive.button_reply.id;
-      //     let selectedRegex = regexMap[buttonId];
-      //     let userInput = messages.text.body.trim();
-      //     let errorMessageMap = {
-      //           request_btn: '❌ Invalid Request ID. Use format: REQ-1234',
-      //           hp_btn: '❌ Invalid Hot Part ID. Use format: HP-1234',
-      //           nci_btn: '❌ Invalid NCI ID. Use format: NCI-202512-1234'
-      //         };
-      //     let successMessageMap = {
-      //           request_btn: '✅ Thank you! Your Request ID has been verified successfully.',
-      //           hp_btn: '✅ Thank you! Your Hot Part ID has been verified successfully.',
-      //           nci_btn: '✅ Thank you! Your NCI number has been verified successfully.'
-      //         };
+      if(messages.text.body){
+          let regexMap = {
+            request_btn: /^REQ-\d{4}$/,
+            hp_btn: /^HP-\d{4}$/,
+            nci_btn: /^NCI-\d{6}-\d{4}$/
+          };   
+          let buttonId = messages?.interactive?.button_reply?.id;
+          let selectedRegex = regexMap[buttonId];
+          let userInput = messages?.text?.body.trim();
+          let errorMessageMap = {
+                request_btn: '❌ Invalid Request ID. Use format: REQ-1234',
+                hp_btn: '❌ Invalid Hot Part ID. Use format: HP-1234',
+                nci_btn: '❌ Invalid NCI ID. Use format: NCI-202512-1234'
+              };
+          let successMessageMap = {
+                request_btn: '✅ Thank you! Your Request ID has been verified successfully.',
+                hp_btn: '✅ Thank you! Your Hot Part ID has been verified successfully.',
+                nci_btn: '✅ Thank you! Your NCI number has been verified successfully.'
+              };
 
-      //     if (!selectedRegex.test(userInput)) {
+          if (!selectedRegex.test(userInput)) {
 
-      //         // if (buttonId === 'request_btn') {
-      //         //   sendMessage(
-      //         //     messages.from,
-      //         //     '✅ Thank you! Your Request ID has been verified successfully.'
-      //         //   );
-      //         // } else if (buttonId === 'hp_btn') {
-      //         //   sendMessage(
-      //         //     messages.from,
-      //         //     '✅ Thank you! Your Hot Part ID has been verified successfully.'
-      //         //   );
-      //         // } else if (buttonId === 'nci_btn') {
-      //         //   sendMessage(
-      //         //     messages.from,
-      //         //     '✅ Thank you! Your NCI number has been verified successfully.'
-      //         //   );
-      //         // } 
-      //         sendMessage(
-      //           messages.from,
-      //           successMessageMap[buttonId]
-      //         );
+              // if (buttonId === 'request_btn') {
+              //   sendMessage(
+              //     messages.from,
+              //     '✅ Thank you! Your Request ID has been verified successfully.'
+              //   );
+              // } else if (buttonId === 'hp_btn') {
+              //   sendMessage(
+              //     messages.from,
+              //     '✅ Thank you! Your Hot Part ID has been verified successfully.'
+              //   );
+              // } else if (buttonId === 'nci_btn') {
+              //   sendMessage(
+              //     messages.from,
+              //     '✅ Thank you! Your NCI number has been verified successfully.'
+              //   );
+              // } 
+              sendMessage(
+                messages.from,
+                successMessageMap[buttonId]
+              );
           
-      //     } else {
-      //         sendMessage(
-      //           messages.from,
-      //           errorMessageMap[buttonId]
-      //         );
-      //       }
-      // }
+          } else {
+              sendMessage(
+                messages.from,
+                errorMessageMap[buttonId]
+              );
+            }
+      }
     }
 
     if (messages.type === 'interactive') {
@@ -124,21 +124,21 @@ app.post('/webhook', async (req, res) => {
 
      if (messages?.interactive?.type === 'button_reply') {
 
-            if (messages.interactive.button_reply.id === 'request_btn') {
+            if (messages?.interactive?.button_reply?.id === 'request_btn') {
 
               sendMessage(
                 messages.from,
                 '📝 Please enter your Request ID (example: REQ-1234)'
               );
 
-            } else if (messages.interactive.button_reply.id === 'hp_btn') {
+            } else if (messages?.interactive?.button_reply?.id === 'hp_btn') {
 
               sendMessage(
                 messages.from,
                 '📝 Please enter your Request ID. (example: HP-1234)'
               );
 
-            } else if (messages.interactive.button_reply.id === 'nci_btn') {
+            } else if (messages?.interactive?.button_reply?.id === 'nci_btn') {
 
               sendMessage(
                 messages.from,
@@ -149,7 +149,7 @@ app.post('/webhook', async (req, res) => {
 
               sendMessage(
                 messages.from,
-                `You selected: ${messages.interactive.button_reply.title}`
+                `You selected: ${messages?.interactive?.button_reply?.title}`
               );
             }
       }
