@@ -87,13 +87,12 @@ app.post('/webhook', async (req, res) => {
             const numberOnly = match[1];
             const ApiUrl = 'hotparts';
             const title = 'Hot Parts'; 
-            const  from = messages?.from
 
             hpAndDD(
               ApiUrl,
               title,
               numberOnly,
-              from
+              messages.from
              )
             
           }
@@ -105,13 +104,12 @@ app.post('/webhook', async (req, res) => {
             const numberOnly = match[1];
             const ApiUrl = 'Daily%20Demand';
             const title = 'Daily Demand';
-            const  from = messages?.from
 
              hpAndDD(
               ApiUrl,
               title,
               numberOnly,
-              from
+              messages.from
              )
           }
       }
