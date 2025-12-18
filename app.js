@@ -167,7 +167,6 @@ app.post('/webhook', async (req, res) => {
 })
 
 async function hpAndDD(apiurl, title, value) {
-    console.log(to, body);
   try {
    const apiResponse = await axios.get(
                   `https://zfdevapi.sunlandls.com/ctarmticket/Hotparts/Getdetailsbyid?Type=${apiurl}&TicketId=${value}`
