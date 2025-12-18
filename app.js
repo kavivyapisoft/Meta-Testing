@@ -49,7 +49,24 @@ app.post('/webhook', async (req, res) => {
     `)
   }
     console.log('From', messages);
-
+    let regexMap = {
+            request_btn: /^REQ-\d{4}$/,
+            hp_btn: /^HP-\d{4}$/,
+            nci_btn: /^NCI-\d{6}-\d{4}$/
+          };   
+    let buttonId = messages?.interactive?.button_reply?.id;
+    let selectedRegex = regexMap[buttonId];
+    let userInput = messages?.text?.body.trim();
+    let errorMessageMap = {
+            request_btn: '❌ Invalid Request ID. Use format: REQ-1234',
+            hp_btn: '❌ Invalid Hot Part ID. Use format: HP-1234',
+            nci_btn: '❌ Invalid NCI ID. Use format: NCI-202512-1234'
+          };
+    let successMessageMap = {
+          request_btn: '✅ Thank you! Your Request ID has been verified successfully.',
+          hp_btn: '✅ Thank you! Your Hot Part ID has been verified successfully.',
+          nci_btn: '✅ Thank you! Your NCI number has been verified successfully.'
+        };
   if (messages) {
     // Handle received messages
     if (messages.type === 'text') {
@@ -64,27 +81,13 @@ app.post('/webhook', async (req, res) => {
       if (messages.text.body.toLowerCase() === 'buttons') {
         sendReplyButtons(messages.from)
       }
-      if(messages.text.body){
-          let regexMap = {
-            request_btn: /^REQ-\d{4}$/,
-            hp_btn: /^HP-\d{4}$/,
-            nci_btn: /^NCI-\d{6}-\d{4}$/
-          };   
-          let buttonId = messages?.interactive?.button_reply?.id;
-          let selectedRegex = regexMap[buttonId];
-          let userInput = messages?.text?.body.trim();
-          let errorMessageMap = {
-                request_btn: '❌ Invalid Request ID. Use format: REQ-1234',
-                hp_btn: '❌ Invalid Hot Part ID. Use format: HP-1234',
-                nci_btn: '❌ Invalid NCI ID. Use format: NCI-202512-1234'
-              };
-          let successMessageMap = {
-                request_btn: '✅ Thank you! Your Request ID has been verified successfully.',
-                hp_btn: '✅ Thank you! Your Hot Part ID has been verified successfully.',
-                nci_btn: '✅ Thank you! Your NCI number has been verified successfully.'
-              };
-
-          if (!selectedRegex.test(userInput)) {
+        
+      if(messages.text.body && !selectedRegex.test(userInput)){
+        
+         sendMessage(
+                messages.from,
+                successMessageMap[buttonId]
+              );
 
               // if (buttonId === 'request_btn') {
               //   sendMessage(
@@ -102,18 +105,13 @@ app.post('/webhook', async (req, res) => {
               //     '✅ Thank you! Your NCI number has been verified successfully.'
               //   );
               // } 
-              sendMessage(
-                messages.from,
-                successMessageMap[buttonId]
-              );
-          
-          } else {
+
+      }else {
               sendMessage(
                 messages.from,
                 errorMessageMap[buttonId]
               );
             }
-      }
     }
 
     if (messages.type === 'interactive') {
