@@ -64,20 +64,20 @@ app.post('/webhook', async (req, res) => {
       if (messages.text.body.toLowerCase() === 'buttons') {
         sendReplyButtons(messages.from)
       }
-      const regexMap = {
+      let regexMap = {
         request_btn: /^REQ-\d{4}$/,
         hp_btn: /^HP-\d{4}$/,
         nci_btn: /^NCI-\d{6}-\d{4}$/
       };   
-      const buttonId = messages.interactive.button_reply.id;
-      const selectedRegex = regexMap[buttonId];
-      const userInput = messages.text.body.trim();
-      const errorMessageMap = {
+      let buttonId = messages.interactive.button_reply.id;
+      let selectedRegex = regexMap[buttonId];
+      let userInput = messages.text.body.trim();
+      let errorMessageMap = {
             request_btn: '❌ Invalid Request ID. Use format: REQ-1234',
             hp_btn: '❌ Invalid Hot Part ID. Use format: HP-1234',
             nci_btn: '❌ Invalid NCI ID. Use format: NCI-202512-1234'
           };
-      const successMessageMap = {
+      let successMessageMap = {
             request_btn: '✅ Thank you! Your Request ID has been verified successfully.',
             hp_btn: '✅ Thank you! Your Hot Part ID has been verified successfully.',
             nci_btn: '✅ Thank you! Your NCI number has been verified successfully.'
@@ -123,9 +123,12 @@ app.post('/webhook', async (req, res) => {
 
      if (messages?.interactive?.type === 'button_reply') {
 
-        const buttonId = messages.interactive.button_reply.id;
-        const buttonTitle = messages.interactive.button_reply.title;
+        let buttonId = messages.interactive.button_reply.id;
+        let buttonTitle = messages.interactive.button_reply.title;
 
+        console.log(messages.interactive.button_reply);
+        console.log(buttonId,buttonTitle);
+        
             if (buttonId === 'request_btn') {
 
               sendMessage(
