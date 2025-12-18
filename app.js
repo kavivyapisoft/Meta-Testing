@@ -49,13 +49,14 @@ app.post('/webhook', async (req, res) => {
     `)
   }
     console.log('From', messages);
+     const  from = messages.from
   
   if (messages) {
     // Handle received messages
     if (messages.type === 'text') {
       if (messages.text.body.toLowerCase() === 'hi') {
         replyMessage(messages.from, 'Hello 👋 How can I help you today?', messages.id);
-
+        sendReplyButtons(messages.from)
       }
 
       if (messages.text.body.toLowerCase() === 'list') {
@@ -91,7 +92,8 @@ app.post('/webhook', async (req, res) => {
             hpAndDD(
               ApiUrl,
               title,
-              numberOnly
+              numberOnly,
+              from
              )
             
           }
@@ -107,7 +109,8 @@ app.post('/webhook', async (req, res) => {
              hpAndDD(
               ApiUrl,
               title,
-              numberOnly
+              numberOnly,
+              from
              )
           }
       }
@@ -167,7 +170,7 @@ app.post('/webhook', async (req, res) => {
   res.status(200).send('Webhook processed')
 })
 
-async function hpAndDD(apiurl, title, value) {
+async function hpAndDD(apiurl, title, value, from) {
   try {
    const apiResponse = await axios.get(
                   `https://zfdevapi.sunlandls.com/ctarmticket/Hotparts/Getdetailsbyid?Type=${apiurl}&TicketId=${value}`
@@ -202,7 +205,7 @@ async function hpAndDD(apiurl, title, value) {
  ✅ Thank you!
   `
                 sendMessage(
-                  messages.from,
+                  messages.fromfrom,
                   TempSend
                 );
 
