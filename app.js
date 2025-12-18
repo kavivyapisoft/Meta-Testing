@@ -1,7 +1,7 @@
 const express = require('express')
 const axios = require('axios')
 
-const WHATSAPP_ACCESS_TOKEN = "EAAKePyNJnaUBQG2J1Eat0Jy9o650GpFkw8i3ag4hV39DIi7g06b6gj5WysE01el9G1nMRKsNeFXUt3uYifD0NcHt8dMb3rUci21ZCNeXdtdpzoSCslkOAtzBMZAdt3L8VBknI1wmQIybGZByeRHLWmgxY7Xqu5unOLRKCDLZCgeUZC2TNxbqCe7HdZARghFNHpIex23PM93Hlkv5f6dDxfKat47PSkGvUZCXRk4m5O3PJO2XpApfel49U6ZAhmeLaIp8MCyh3XcCzsTBUSj3cAkCLmDP"
+const WHATSAPP_ACCESS_TOKEN = "EAAKePyNJnaUBQH4IkUpUmEuk7YyCLY8SBtEhACy4E1v8dQULBV9S1fboqh3lqF80pU1htaWGEuLE7FoiJ9grjGpV7g6mi49jTeWY1SQot7axUgcP30p2Y72FV19Uj7oZBmMlmoa48r06ukkmPaUnK4AGKSJhzWYtHQU4DYy3CmGsdOTlIwMQYEdLrZC10j5QLpmH2WrKEXGZANC7dvrZATMwjpoQMFqrtfKIPYf8b38SZCRff6TT3saLopTGXEuZCMzLcZAhSdepm1F9sQaCiz8GLIQIwZDZD"
 const WEBHOOK_VERIFY_TOKEN = "KAVI"
 const phoneNumberId ="960587527127470"
 
@@ -54,7 +54,8 @@ app.post('/webhook', async (req, res) => {
     // Handle received messages
     if (messages.type === 'text') {
       if (messages.text.body.toLowerCase() === 'hi') {
-        replyMessage(messages.from, 'Hello 👋 How can I help you today?', messages.id)
+        replyMessage(messages.from, 'Hello 👋 How can I help you today?', messages.id);
+
       }
 
       if (messages.text.body.toLowerCase() === 'list') {
