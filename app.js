@@ -80,7 +80,7 @@ app.post('/webhook', async (req, res) => {
       console.log(messages?.interactive);
       
         
-      if (messages.text.body.toLowerCase() === req-1234) {
+      if (messages.text.body.toLowerCase() === 1234) {
         replyMessage(messages.from, '✅ Thank you! Your Request ID has been verified successfully.', messages.id)
 
       } else if (buttonId === 'hp_btn' && userInput) {
@@ -112,7 +112,7 @@ app.post('/webhook', async (req, res) => {
 
             if (messages?.interactive?.button_reply?.id === 'request_btn') {
 
-            replyMessage(messages.from, '📝 Please enter your Request ID (example: REQ-1234)', messages.id)
+            replyMessage(messages.from, '📝 Please enter your Request ID (example: 1234)', messages.id)
             
 
             } else if (messages?.interactive?.button_reply?.id === 'hp_btn') {
@@ -129,13 +129,7 @@ app.post('/webhook', async (req, res) => {
                 '📝 Please enter your Request ID. (example: NCI-202512-1234)'
               );
 
-            } else {
-
-              sendMessage(
-                messages.from,
-                `You selected: ${messages?.interactive?.button_reply?.title}`
-              );
-            }
+            } 
       }
 
     }
