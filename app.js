@@ -62,11 +62,7 @@ app.post('/webhook', async (req, res) => {
             hp_btn: '❌ Invalid Hot Part ID. Use format: HP-1234',
             nci_btn: '❌ Invalid NCI ID. Use format: NCI-202512-1234'
           };
-    let successMessageMap = {
-          request_btn: '✅ Thank you! Your Request ID has been verified successfully.',
-          hp_btn: '✅ Thank you! Your Hot Part ID has been verified successfully.',
-          nci_btn: '✅ Thank you! Your NCI number has been verified successfully.'
-        };
+   
   if (messages) {
     // Handle received messages
     if (messages.type === 'text') {
@@ -82,36 +78,28 @@ app.post('/webhook', async (req, res) => {
         sendReplyButtons(messages.from)
       }
         
-      // if(messages.text.body && !selectedRegex.test(userInput)){
-        
-      //    sendMessage(
-      //           messages.from,
-      //           successMessageMap[buttonId]
-      //         );
-
-      //         // if (buttonId === 'request_btn') {
-      //         //   sendMessage(
-      //         //     messages.from,
-      //         //     '✅ Thank you! Your Request ID has been verified successfully.'
-      //         //   );
-      //         // } else if (buttonId === 'hp_btn') {
-      //         //   sendMessage(
-      //         //     messages.from,
-      //         //     '✅ Thank you! Your Hot Part ID has been verified successfully.'
-      //         //   );
-      //         // } else if (buttonId === 'nci_btn') {
-      //         //   sendMessage(
-      //         //     messages.from,
-      //         //     '✅ Thank you! Your NCI number has been verified successfully.'
-      //         //   );
-      //         // } 
-
-      // }else {
-      //         sendMessage(
-      //           messages.from,
-      //           errorMessageMap[buttonId]
-      //         );
-      //       }
+      if (buttonId === 'request_btn' && userInput) {
+        sendMessage(
+          messages.from,
+          '✅ Thank you! Your Request ID has been verified successfully.'
+        );
+      } else if (buttonId === 'hp_btn' && userInput) {
+        sendMessage(
+          messages.from,
+          '✅ Thank you! Your Hot Part ID has been verified successfully.'
+        );
+      } else if (buttonId === 'nci_btn' && userInput) {
+        sendMessage(
+          messages.from,
+          '✅ Thank you! Your NCI number has been verified successfully.'
+        );
+      } else{     
+       sendMessage(
+         messages.from,
+         errorMessageMap[buttonId]
+       );
+     }
+            
     }
 
     if (messages.type === 'interactive') {
