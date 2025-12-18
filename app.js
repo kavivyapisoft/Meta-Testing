@@ -50,12 +50,6 @@ app.post('/webhook', async (req, res) => {
   }
     console.log('From', messages);
   
-    let errorMessageMap = {
-            request_btn: '❌ Invalid Request ID. Use format: REQ-1234',
-            hp_btn: '❌ Invalid Hot Part ID. Use format: HP-1234',
-            nci_btn: '❌ Invalid NCI ID. Use format: NCI-202512-1234'
-          };
-   
   if (messages) {
     // Handle received messages
     if (messages.type === 'text') {
@@ -72,27 +66,78 @@ app.post('/webhook', async (req, res) => {
       }
       
         const patterns = {
-          REQUEST: /^REQ-\d{4}$/i,
-          HOTPART: /^HP-\d{4}$/i,
-          NCI: /^NCI-\d{6}-\d{4}$/i
+          requesttemp: /^REQ-\d{4}$/i,
+          hotparttemp: /^HP-\d{4}$/i,
+          ncitemp: /^NCI-\d{6}-\d{4}$/i
         };
           const userInput = messages.text.body.trim().replace(/\s+/g, '');
       
-      if (patterns.REQUEST.test(userInput)) {
+      if (patterns.requesttemp.test(userInput)) {
             console.log('✅ REQUEST matched');
-
         // replyMessage(messages.from, 
         //   '✅ Thank you! Your Request ID has been verified successfully.', 
         //   messages.id)
       }
 
-      if (messages.text.body.toLowerCase() === 'hp-1234') {
-         replyMessage(messages.from, 
-          '✅ Thank you! Your Hot Part ID has been verified successfully.', 
-          messages.id)
+      if (patterns.hotparttemp.test(userInput)) {
+          console.log('✅ REQUEST matched');
+            const match = userInput.match(/^HP-(\d{4})$/i);
+          if (match) {
+            const numberOnly = match[1];
+            console.log(numberOnly); // 1234
+             try {
+                // 🔹 API call
+                const apiResponse = await axios.get(
+                  `https://zfdevapi.sunlandls.com/ctarmticket/Hotparts/Getdetailsbyid?Type=hotparts&TicketId=${numberOnly}`
+                );
+
+                const data = apiResponse.data[0];
+
+                let TempSend =`
+ id: ${data.id}
+ storer:${ data.storer}
+ Sku: ${data.Sku}
+ itemdescription: ${data.itemdescription}
+ Grn: ${data.Grn}
+ status: ${data.status}
+ Type: ${data.Type}
+ MRPCode: ${data.MRPCode}
+ Quantity: ${data.Quantity}
+ AvailableQuantity: ${data.AvailableQuantity}
+ Category: ${data.Category}
+ Department: ${data.Department}
+ DemandDate: ${data.DemandDate}
+ Priority: ${data.Priority}
+ PriorityCode: ${data.PriorityCode}
+ Latesthotpart_reasoncodes: ${data.Latesthotpart_reasoncodes}
+ TRAILERNUMBER: ${data.TRAILERNUMBER}
+ CreatedAt:${data.CreatedAt}
+ CreatedByUser: ${data.CreatedByUser}
+ EditedAt: ${data.EditedAt}
+ editedbyuser: ${data.editedbyuser}
+ assignedtoemail: ${data.assignedtoemail}
+ ✅ Thank you!
+  `
+
+                sendMessage(
+                  messages.from,
+                  TempSend
+                );
+
+              } catch (error) {
+                sendMessage(
+                  messages.from,
+                  `❌ Sorry, Hot Part ${hotPartNumber} not found.\nPlease check and try again.`
+                );
+              }
+          }
+
+
+       
       } 
 
-      if (messages.text.body.toLowerCase() === 'nci-202512-1234') {
+      if (patterns.ncitemp.test(userInput)) {
+         console.log('✅ REQUEST matched');
          replyMessage(messages.from, 
           '✅ Thank you! Your NCI number has been verified successfully.', 
           messages.id)
