@@ -49,21 +49,19 @@ app.post('/webhook', async (req, res) => {
     `)
   }
     console.log('From', messages);
-     const  from = messages.from
   
   if (messages) {
     // Handle received messages
     if (messages.type === 'text') {
       if (messages.text.body.toLowerCase() === 'hi') {
         replyMessage(messages.from, 'Hello 👋 How can I help you today?', messages.id);
-        sendReplyButtons(messages.from)
       }
 
       if (messages.text.body.toLowerCase() === 'list') {
         sendList(messages.from)
       }
 
-      if (messages.text.body.toLowerCase() === 'buttons') {
+      if (messages.text.body.toLowerCase() === 'hi there') {
         sendReplyButtons(messages.from)
       }
       
@@ -88,7 +86,9 @@ app.post('/webhook', async (req, res) => {
           if (match) {
             const numberOnly = match[1];
             const ApiUrl = 'hotparts';
-            const title = 'Hot Parts';              
+            const title = 'Hot Parts'; 
+            const  from = messages?.from
+
             hpAndDD(
               ApiUrl,
               title,
@@ -105,6 +105,7 @@ app.post('/webhook', async (req, res) => {
             const numberOnly = match[1];
             const ApiUrl = 'Daily%20Demand';
             const title = 'Daily Demand';
+            const  from = messages?.from
 
              hpAndDD(
               ApiUrl,
