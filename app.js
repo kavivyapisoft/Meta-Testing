@@ -53,8 +53,8 @@ app.post('/webhook', async (req, res) => {
   if (messages) {
     // Handle received messages
     if (messages.type === 'text') {
-      if (messages.text.body.toLowerCase() === 'hello') {
-        replyMessage(messages.from, 'Hello. How are you?', messages.id)
+      if (messages.text.body.toLowerCase() === 'hi') {
+        replyMessage(messages.from, 'Hello 👋 How can I help you today?', messages.id)
       }
 
       if (messages.text.body.toLowerCase() === 'list') {
@@ -64,17 +64,100 @@ app.post('/webhook', async (req, res) => {
       if (messages.text.body.toLowerCase() === 'buttons') {
         sendReplyButtons(messages.from)
       }
+      const regexMap = {
+        REQUEST_BUTTON: /^REQ-\d{4}$/,
+        HOTPART_BUTTON: /^HP-\d{4}$/,
+        NCI_BUTTON: /^NCI-\d{6}-\d{4}$/
+      };   
+      const buttonId = messages.interactive.button_reply.id;
+      const selectedRegex = regexMap[buttonId];
+      const userInput = messages.text.body.trim();
+      const errorMessageMap = {
+            REQUEST_BUTTON: '❌ Invalid Request ID. Use format: REQ-1234',
+            HOTPART_BUTTON: '❌ Invalid Hot Part ID. Use format: HP-1234',
+            NCI_BUTTON: '❌ Invalid NCI ID. Use format: NCI-202512-1234'
+          };
+      const successMessageMap = {
+            REQUEST_BUTTON: '✅ Thank you! Your Request ID has been verified successfully.',
+            HOTPART_BUTTON: '✅ Thank you! Your Hot Part ID has been verified successfully.',
+            NCI_BUTTON: '✅ Thank you! Your NCI number has been verified successfully.'
+          };
+
+      if (!selectedRegex.test(userInput)) {
+
+          // if (buttonId === 'REQUEST_BUTTON') {
+          //   sendMessage(
+          //     messages.from,
+          //     '✅ Thank you! Your Request ID has been verified successfully.'
+          //   );
+          // } else if (buttonId === 'HOTPART_BUTTON') {
+          //   sendMessage(
+          //     messages.from,
+          //     '✅ Thank you! Your Hot Part ID has been verified successfully.'
+          //   );
+          // } else if (buttonId === 'NCI_BUTTON') {
+          //   sendMessage(
+          //     messages.from,
+          //     '✅ Thank you! Your NCI number has been verified successfully.'
+          //   );
+          // } 
+           sendMessage(
+            messages.from,
+            successMessageMap[buttonId]
+          );
+       
+      } else {
+           sendMessage(
+            messages.from,
+            errorMessageMap[buttonId]
+          );
+        }
+      
     }
 
     if (messages.type === 'interactive') {
       if (messages.interactive.type === 'list_reply') {
+
         sendMessage(messages.from, `You selected the option with ID ${messages.interactive.list_reply.id} - Title ${messages.interactive.list_reply.title}`)
       }
 
-      if (messages.interactive.type === 'button_reply') {
-        sendMessage(messages.from, `You selected the button with ID ${messages.interactive.button_reply.id} - Title ${messages.interactive.button_reply.title}`)
+     if (messages?.interactive?.type === 'button_reply') {
+
+        const buttonId = messages.interactive.button_reply.id;
+        const buttonTitle = messages.interactive.button_reply.title;
+
+            if (buttonId === 'REQUEST_BUTTON') {
+
+              sendMessage(
+                messages.from,
+                '📝 You selected REQUEST. Please enter your Request ID (example: REQ-1234)'
+              );
+
+            } else if (buttonId === 'HOTPART_BUTTON') {
+
+              sendMessage(
+                messages.from,
+                '📝 You selected REQUEST. Please enter your Request ID. (example: HP-1234)'
+              );
+
+            } else if (buttonId === 'NCI_BUTTON') {
+
+              sendMessage(
+                messages.from,
+                '📝 You selected REQUEST. Please enter your Request ID. (example: NCI-202512-1234)'
+              );
+
+            } else {
+
+              sendMessage(
+                messages.from,
+                `You selected: ${buttonTitle}`
+              );
+            }
       }
+
     }
+    
     
     console.log(JSON.stringify(messages, null, 2))
   }
@@ -159,13 +242,13 @@ async function sendList(to) {
         type: 'list',
         header: {
           type: 'text',
-          text: 'Message Header'
+          text: 'VYAPI SOFT'
         },
         body: {
-          text: 'This is a interactive list message'
+          text: 'Select an option to proceed.'
         },
         footer: {
-          text: 'This is the message footer'
+          text: 'Powered by VYAPI SOFT'
         },
         action: {
           button: 'Tap for the options',
@@ -227,28 +310,35 @@ async function sendReplyButtons(to) {
         type: 'button',
         header: {
           type: 'text',
-          text: 'Message Header'
+          text: 'VYAPI SOFT'
         },
-        body: {
-          text: 'This is a interactive reply buttons message'
+       body: {
+        text: 'Select an option to proceed.'
         },
         footer: {
-          text: 'This is the message footer'
-        },
+          text: 'Powered by VYAPI SOFT'
+          },
         action: {
           buttons: [
             {
               type: 'reply',
               reply: {
-                id: 'first_button',
-                title: 'First Button'
+                id: 'REQUEST_BUTTON',
+                title: 'REQUEST'
               }
             },
             {
               type: 'reply',
               reply: {
-                id: 'second_button',
-                title: 'Second Button'
+                id: 'HOTPART_BUTTON',
+                title: 'HOT PART'
+              }
+            },
+            {
+              type: 'reply',
+              reply: {
+                id: 'NCI_BUTTON',
+                title: 'NCI'
               }
             }
           ]
