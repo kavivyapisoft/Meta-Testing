@@ -1,8 +1,8 @@
 const express = require('express')
 const axios = require('axios')
 
-const WHATSAPP_ACCESS_TOKEN = process.env.TOKEN
-const WEBHOOK_VERIFY_TOKEN = process.env.MYTOKEN
+const WHATSAPP_ACCESS_TOKEN = "EAAKePyNJnaUBQAaoZB1YtuLBXnOlUwM6O6gL3c66VEg3BZAqmPuc8ZBVsWXcZCrFAfAymGEbSspi4l3ygmnSpVKtQ9XQWsF6bEOT60LBR9GNSq79xZBXvtYhR2XZBcONPIjLiZA2rGms4mFIe7i5MMYfpcA0l8T7rzIXZBNPb1tbZCNT4FxB2xsnbZCSCbv0NLaPJdoMO3Vb0yhglIdhrjSyle8OKiPn0B2rsO8ALO3wqjJCUFTqHyoJGAyprG9ATKfMeQui1TSJFXDZAOZCu2l2xy0ozgWAgQZDZD"
+const WEBHOOK_VERIFY_TOKEN = "KAVI"
 const phoneNumberId ="960587527127470"
 
 const app = express()
